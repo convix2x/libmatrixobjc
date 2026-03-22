@@ -1,5 +1,5 @@
 #import <UIKit/UIKit.h>
 
-@interface TeCliRootViewController : UITableViewController
+@interface TeCliRootViewController : UIViewController
 
 @end

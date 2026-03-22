@@ -1,58 +1,92 @@
 #import "TeCliRootViewController.h"
+#import <MatrixClient.h>
 
 @interface TeCliRootViewController ()
-@property (nonatomic, strong) NSMutableArray * objects;
+@property (nonatomic, strong) UITextField *homeserverField;
+@property (nonatomic, strong) UITextField *usernameField;
+@property (nonatomic, strong) UITextField *passwordField;
+@property (nonatomic, strong) UIButton *loginButton;
+@property (nonatomic, strong) UIActivityIndicatorView *spinner;
 @end
 
 @implementation TeCliRootViewController
 
-- (void)loadView {
-	[super loadView];
-
-	_objects = [NSMutableArray array];
-
-	self.title = @"Root View Controller";
-	self.navigationItem.leftBarButtonItem = self.editButtonItem;
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addButtonTapped:)];
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.title = @"Log In";
+    self.view.backgroundColor = [UIColor whiteColor];
+    [self setupFields];
 }
 
-- (void)addButtonTapped:(id)sender {
-	[_objects insertObject:[NSDate date] atIndex:0];
-	[self.tableView insertRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:0 inSection:0] ] withRowAnimation:UITableViewRowAnimationAutomatic];
+- (void)setupFields {
+    CGFloat width = self.view.bounds.size.width - 40;
+    CGFloat x = 20;
+
+    _homeserverField = [self textFieldWithPlaceholder:@"Homeserver" y:100 width:width x:x secure:NO];
+    _homeserverField.text = @"https://matrix.org";
+    _homeserverField.keyboardType = UIKeyboardTypeURL;
+    _homeserverField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+
+    _usernameField = [self textFieldWithPlaceholder:@"Username" y:160 width:width x:x secure:NO];
+    _usernameField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+
+    _passwordField = [self textFieldWithPlaceholder:@"Password" y:220 width:width x:x secure:YES];
+
+    _loginButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    _loginButton.frame = CGRectMake(x, 290, width, 44);
+    [_loginButton setTitle:@"Log In" forState:UIControlStateNormal];
+    [_loginButton addTarget:self action:@selector(loginTapped) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:_loginButton];
+
+    _spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    _spinner.center = CGPointMake(self.view.bounds.size.width / 2, 350);
+    _spinner.hidesWhenStopped = YES;
+    [self.view addSubview:_spinner];
 }
 
-#pragma mark - Table View Data Source
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 1;
+- (UITextField *)textFieldWithPlaceholder:(NSString *)placeholder y:(CGFloat)y width:(CGFloat)width x:(CGFloat)x secure:(BOOL)secure {
+    UITextField *field = [[UITextField alloc] initWithFrame:CGRectMake(x, y, width, 44)];
+    field.placeholder = placeholder;
+    field.secureTextEntry = secure;
+    field.borderStyle = UITextBorderStyleRoundedRect;
+    field.returnKeyType = UIReturnKeyNext;
+    [self.view addSubview:field];
+    return field;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return _objects.count;
-}
+- (void)loginTapped {
+    NSString *homeserver = _homeserverField.text;
+    NSString *username   = _usernameField.text;
+    NSString *password   = _passwordField.text;
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	static NSString *CellIdentifier = @"Cell";
-	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (!homeserver.length || !username.length || !password.length) {
+        [[[UIAlertView alloc] initWithTitle:@"Error"
+                                   message:@"All fields are required."
+                                  delegate:nil
+                         cancelButtonTitle:@"OK"
+                         otherButtonTitles:nil] show];
+        return;
+    }
 
-	if (!cell) {
-		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-	}
+    [_spinner startAnimating];
+    _loginButton.enabled = NO;
 
-	NSDate *date = _objects[indexPath.row];
-	cell.textLabel.text = date.description;
-	return cell;
-}
+    MatrixClient *client = [[MatrixClient alloc] initWithHomeserver:homeserver];
+    [client loginWithUsername:username password:password completion:^(NSString *accessToken, NSString *userID, NSError *error) {
+        [_spinner stopAnimating];
+        _loginButton.enabled = YES;
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-	[_objects removeObjectAtIndex:indexPath.row];
-	[tableView deleteRowsAtIndexPaths:@[ indexPath ] withRowAnimation:UITableViewRowAnimationAutomatic];
-}
+        if (error) {
+            [[[UIAlertView alloc] initWithTitle:@"Login Failed"
+                                       message:error.localizedDescription
+                                      delegate:nil
+                             cancelButtonTitle:@"OK"
+                             otherButtonTitles:nil] show];
+            return;
+        }
 
-#pragma mark - Table View Delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	[tableView deselectRowAtIndexPath:indexPath animated:YES];
+        NSLog(@"Logged in as %@", userID);
+    }];
 }
 
 @end
