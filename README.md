@@ -13,7 +13,7 @@ View the wiki for api docs
 
 # Building
 
-The way I reccomend building this into your app is compiling it into the app directly:
+The way I reccommend building this into your app is compiling it into the app directly:
 ```makefile
 TARGET := iphone:clang:6.1
 ARCHS := armv7
@@ -36,3 +36,9 @@ testclient_CFLAGS = -fobjc-arc -I../libmatrixobjc
 
 include $(THEOS_MAKE_PATH)/application.mk
 ```
+
+
+# License
+`libmatrixobjc` is licensed under the GNU Lesser General Public License v2.1.
+The `testclient` is licensed under the GNU General Public License v3.
+See `LICENSE` for details.
