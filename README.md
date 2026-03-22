@@ -2,7 +2,16 @@
 
 Matrix API library for Theos/Objective-C
 
-# building apps
+# Note
+
+You should probably set up a proxy server because most homeservers have stopped supporting the ciphers used in iOS 6
+
+# Examples
+
+You can view an example client in the testclient folder. The library is inside libmatrixobjc folder.
+View the wiki for api docs
+
+# Building
 
 The way I reccomend building this into your app is compiling it into the app directly:
 ```makefile
