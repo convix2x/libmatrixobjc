@@ -16,6 +16,12 @@
     self.title = @"Log In";
     self.view.backgroundColor = [UIColor whiteColor];
     [self setupFields];
+	UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboard)];
+	[self.view addGestureRecognizer:tap];
+}
+
+- (void)dismissKeyboard {
+    [self.view endEditing:YES];
 }
 
 - (void)setupFields {
@@ -86,6 +92,7 @@
         }
 
         NSLog(@"Logged in as %@", userID);
+		// todo: add room list
     }];
 }
 
