@@ -1,4 +1,5 @@
 #import "TeCliRootViewController.h"
+#import "TeCliRoomListViewController.h"
 #import <MatrixClient.h>
 
 @interface TeCliRootViewController ()
@@ -92,7 +93,8 @@
         }
 
         NSLog(@"Logged in as %@", userID);
-		// todo: add room list
+		TeCliRoomListViewController *rooms = [[TeCliRoomListViewController alloc] initWithClient:client];
+		[self.navigationController pushViewController:rooms animated:YES];
     }];
 }
 

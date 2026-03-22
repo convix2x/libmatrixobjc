@@ -6,7 +6,7 @@ include $(THEOS)/makefiles/common.mk
 
 APPLICATION_NAME = testclient
 
-testclient_FILES = main.m TeCliAppDelegate.m TeCliRootViewController.m \
+testclient_FILES = main.m TeCliAppDelegate.m TeCliRootViewController.m TeCliRoomListViewController.m \
 	../libmatrixobjc/MatrixDefines.m \
 	../libmatrixobjc/MatrixClient.m \
 	../libmatrixobjc/MatrixRoom.m \
