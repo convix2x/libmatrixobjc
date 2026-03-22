@@ -2,7 +2,7 @@
 #import "MatrixClient.h"
 #import "MatrixRoom.h"
 
-@interface TeCliChatViewController : UITableViewController <UITextFieldDelegate>
+@interface TeCliChatViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>
 
 - (instancetype)initWithClient:(MatrixClient *)client room:(MatrixRoom *)room;
 
