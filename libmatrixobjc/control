@@ -1,0 +1,9 @@
+Package: org.coni.nekoweb.libmatrixobjc
+Name: libmatrixobjc
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: An awesome library of some sort!!
+Maintainer: Coni S
+Author: Coni S
+Section: System
+Tag: role::developer
