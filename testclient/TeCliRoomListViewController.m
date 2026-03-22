@@ -2,6 +2,7 @@
 #import "MatrixRoom.h"
 #import "MatrixSyncResponse.h"
 #import "TeCliChatViewController.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface TeCliRoomListViewController ()
 @property (nonatomic, strong) MatrixClient *client;
@@ -44,6 +45,24 @@
         }
 
         _rooms = [response.joinedRooms allValues];
+        [_client profileForUserID:_client.userID completion:^(MatrixUser *user, NSError *error) {
+            if (error) { NSLog(@"Profile error: %@", error); return; }
+            NSLog(@"Display name: %@, avatar: %@", user.displayName, user.avatarURL);
+            if (!user.avatarURL) return;
+            
+            [_client avatarDataForMXCURL:user.avatarURL completion:^(NSData *data, NSString *mimeType, NSError *err) {
+                if (err) { NSLog(@"Avatar error: %@", err); return; }
+                UIImage *img = [UIImage imageWithData:data];
+                if (!img) { NSLog(@"Couldn't decode image"); return; }
+                NSLog(@"Got avatar! %@ bytes, mime: %@", @(data.length), mimeType);
+                // show in navbar 
+                UIImageView *iv = [[UIImageView alloc] initWithImage:img];
+                iv.frame = CGRectMake(0, 0, 32, 32);
+                iv.layer.cornerRadius = 16;
+                iv.clipsToBounds = YES;
+                self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:iv];
+            }];
+        }];
         [self.tableView reloadData];
     }];
 }

@@ -14,7 +14,7 @@ testclient_FILES = main.m TeCliAppDelegate.m TeCliRootViewController.m TeCliRoom
 	../libmatrixobjc/MatrixUser.m \
 	../libmatrixobjc/MatrixSyncResponse.m
 
-testclient_FRAMEWORKS = UIKit CoreGraphics
+testclient_FRAMEWORKS = UIKit CoreGraphics QuartzCore
 testclient_CFLAGS = -fobjc-arc -I../libmatrixobjc
 
 include $(THEOS_MAKE_PATH)/application.mk
