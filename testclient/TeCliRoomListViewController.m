@@ -1,6 +1,7 @@
 #import "TeCliRoomListViewController.h"
 #import "MatrixRoom.h"
 #import "MatrixSyncResponse.h"
+#import "TeCliChatViewController.h"
 
 @interface TeCliRoomListViewController ()
 @property (nonatomic, strong) MatrixClient *client;
@@ -72,7 +73,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    // todo: add chat
+    MatrixRoom *room = _rooms[indexPath.row];
+    TeCliChatViewController *chat = [[TeCliChatViewController alloc] initWithClient:_client room:room];
+    [self.navigationController pushViewController:chat animated:YES];
 }
 
 @end
