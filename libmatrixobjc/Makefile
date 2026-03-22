@@ -6,6 +6,7 @@ include $(THEOS)/makefiles/common.mk
 LIBRARY_NAME = libmatrixobjc
 
 libmatrixobjc_FILES = \
+	MatrixDefines.m \
 	MatrixClient.m \
 	MatrixRoom.m \
 	MatrixMessage.m \

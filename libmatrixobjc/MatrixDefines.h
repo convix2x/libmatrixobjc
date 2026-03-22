@@ -23,6 +23,4 @@ typedef void (^MatrixErrorBlock)(NSError *error);
 typedef void (^MatrixLoginBlock)(NSString *accessToken, NSString *userID, NSError *error);
 typedef void (^MatrixRoomsBlock)(NSArray *rooms, NSError *error);
 typedef void (^MatrixMessagesBlock)(NSArray *messages, NSString *end, NSError *error);
-typedef void (^MatrixUserBlock)(id user, NSError *error);
 typedef void (^MatrixAvatarDataBlock)(NSData *data, NSString *mimeType, NSError *error);
-typedef void (^MatrixSyncBlock)(id response, NSError *error);
